@@ -21,8 +21,19 @@ export function createRedisOmEntityProviders(
         entityMetadata.schemaOptions,
       );
       const repository = new Repository(schema, dataSource);
-      await repository.createIndex();
-      return repository;
+      try {
+        await repository.createIndex();
+        return repository;
+      } catch (error) {
+        if (error.message.includes('Index already exists')) {
+          // 기존 인덱스 삭제
+          await repository.dropIndex();
+          // 새 인덱스 생성
+          await repository.createIndex();
+        } else {
+          throw error;
+        }
+      }
     },
     inject: [getDataSourceToken(dataSourceName)],
   }));

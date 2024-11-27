@@ -1,3 +1,7 @@
+> [!note]
+>
+> this repository is forked from [here](https://github.com/en0ku/nestjs-redis-om).
+
 <p align="center">
   <img height="100px" src="./.github/redisoM.svg" alt="Redis OM Logo" />
 </p>
@@ -25,7 +29,9 @@ $ npm i redis redis-om nestjs-redis-om
 ```typescript
 import { Field, Schema, Entity } from 'nestjs-redis-om';
 
-export interface UserEntity extends Entity {}
+export interface UserEntity extends Entity {
+}
+
 @Schema('user')
 export class UserEntity {
   @Field({ type: 'number', sortable: true })
@@ -55,7 +61,8 @@ import { UserService } from './user.service';
   providers: [UserService],
   controllers: [],
 })
-export class UserModule {}
+export class UserModule {
+}
 ```
 
 ### Import in the app module:
@@ -77,7 +84,8 @@ import { UserModule } from './user/user.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+}
 ```
 
 or async:
@@ -123,7 +131,8 @@ import { getRedisOmConfig } from './config/redis-om.config';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+}
 ```
 
 ### And use it in a service:
@@ -139,14 +148,17 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository,
-  ) {}
+  ) {
+  }
 
   async create(data: UserEntity) {
     return this.userRepository.save(data);
   }
+
   async get(...ids: string[]) {
     return this.userRepository.fetch(...ids);
   }
+
   async getAll() {
     return this.userRepository.search().all();
   }
